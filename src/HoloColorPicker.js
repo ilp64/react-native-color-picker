@@ -145,7 +145,7 @@ export class HoloColorPicker extends Component {
 								collapsable={false}
 							>
 								<Image
-									source={require('../resources/color-circle.png')}
+									source={{uri: 'https://gw.alicdn.com/tfs/TB1U1WmQFXXXXXpXXXXXXXXXXXX-510-510.png'}}
 									resizeMode='contain'
 									style={[styles.pickerImage]}
 								/>

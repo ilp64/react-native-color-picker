@@ -1,6 +1,6 @@
 {
-  "name": "react-native-color-picker",
-  "version": "0.2.1",
+  "name": "bone-cp",
+  "version": "1.0.0",
   "description": "Color picker for react native",
   "main": "src/index.js",
   "scripts": {
@@ -9,12 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/instea/react-native-color-picker.git"
+    "url": "git+https://github.com/ilp64/react-native-color-picker.git"
   },
   "author": "instea.co",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/instea/react-native-color-picker/issues"
+    "url": "https://github.com/ilp64/react-native-color-picker.git"
   },
   "homepage": "https://github.com/instea/react-native-color-picker#readme",
   "devDependencies": {

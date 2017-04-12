@@ -228,7 +228,7 @@ export class TriangleColorPicker extends Component {
               <View style={[styles.triangleUnderlayingColor, computed.triangleUnderlayingColor]} />
               <Image
                 style={[styles.triangleImage, computed.triangleImage]}
-                source={require('../resources/hsv_triangle_mask.png')}
+                source={{uri: 'https://gw.alicdn.com/tfs/TB11gmhQFXXXXboXXXXXXXXXXXX-600-519.png'}}
               />
             </View>
             <View
@@ -237,7 +237,7 @@ export class TriangleColorPicker extends Component {
               collapsable={false}
             >
               <Image
-                source={require('../resources/color-circle.png')}
+                source={{uri: 'https://gw.alicdn.com/tfs/TB1U1WmQFXXXXXpXXXXXXXXXXXX-510-510.png'}}
                 resizeMode='contain'
                 style={[styles.pickerImage]}
               />
