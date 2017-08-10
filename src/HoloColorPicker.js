@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
-import {TouchableOpacity, Slider, View, Image, StyleSheet, InteractionManager, Platform} from 'react-native'
+import {TouchableOpacity, Slider, View, Image, StyleSheet, InteractionManager, Platform, Text} from 'react-native'
 import tinycolor from 'tinycolor2'
-import {createPanResponder} from './utils'
+import {createPanResponder, getOppositeColor} from './utils'
 
 export class HoloColorPicker extends Component {
 
@@ -116,7 +116,10 @@ export class HoloColorPicker extends Component {
 		this._pickerResponder = createPanResponder({
 			onStart: handleColorChange,
 			onMove: handleColorChange,
-		})
+		});
+
+    this.oldColorText = this.props.oldColorText;
+    this.selectedColorText = this.props.selectedColorText;
 	}
 
 	render() {
@@ -134,8 +137,18 @@ export class HoloColorPicker extends Component {
 			oldColor,
 			angle,
 		})
+
+		let oldTextColor, selectedTextColor;
+    if (this.oldColorText) {
+      oldTextColor = getOppositeColor(computed.originalPreview.backgroundColor);
+    }
+    if (this.selectedColorText) {
+      selectedTextColor = getOppositeColor(computed.selectedPreview.backgroundColor);
+
+    }
 		return (
 			<View style={style}>
+				{this.props.note ? <Text style={[styles.note, {textAlign: this.props.notePos}]}>{this.props.note}</Text> : null}
 				<View onLayout={this._onLayout} ref='pickerContainer' style={styles.pickerContainer}>
 					{!pickerSize ? null :
 						<View>
@@ -156,14 +169,22 @@ export class HoloColorPicker extends Component {
 								style={[styles.selectedPreview, computed.selectedPreview]}
 								onPress={this._onColorSelected}
 								activeOpacity={0.7}
-							/>
+							>
+								{this.selectedColorText  ?
+                  this.selectedColorText.split('').map((item, index)=> <Text key={index} style={{color: selectedTextColor}}>{item}</Text>) :
+                  null}
+							</TouchableOpacity>
 							}
 							{oldColor &&
 							<TouchableOpacity
 								style={[styles.originalPreview, computed.originalPreview]}
 								onPress={this._onOldColorSelected}
 								activeOpacity={0.7}
-							/>
+							>
+								{this.oldColorText ?
+									this.oldColorText.split('').map((item, index)=> <Text key={index} style={{color: oldTextColor}}>{item}</Text>) :
+									null}
+							</TouchableOpacity>
 							}
 							{!oldColor &&
 							<TouchableOpacity
@@ -207,6 +228,10 @@ HoloColorPicker.propTypes = {
 	onColorChange: PropTypes.func,
 	onColorSelected: PropTypes.func,
 	onOldColorSelected: PropTypes.func,
+	oldColorText: PropTypes.string,
+	selectedColorText: PropTypes.string,
+	note: PropTypes.string,
+	notePos: PropTypes.string
 }
 
 const makeComputedStyles = ({
@@ -293,10 +318,14 @@ const styles = StyleSheet.create({
 	selectedPreview: {
 		position: 'absolute',
 		borderLeftWidth: 0,
+    alignItems: 'center',
+		justifyContent: 'center'
 	},
 	originalPreview: {
 		position: 'absolute',
 		borderRightWidth: 0,
+    alignItems: 'center',
+		justifyContent: 'center'
 	},
 	selectedFullPreview: {
 		position: 'absolute',
@@ -306,5 +335,10 @@ const styles = StyleSheet.create({
 	},
 	secondSlider: {
 		marginTop: Platform.OS === 'android' ? 20 : 0
+	},
+	note: {
+    color: '#fff',
+		textAlign: 'left',
+		fontSize: 12
 	}
 })
