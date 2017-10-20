@@ -8,14 +8,14 @@ export class HoloColorPicker extends Component {
 	constructor(props, ctx) {
 		super(props, ctx)
 		this.state = {
-			color: {h: 0, s: 1, v: 1},
+			color: {h: 0, s: 1, l: 1},
 			pickerSize: null,
 		}
 		if (props.oldColor) {
-			this.state.color = tinycolor(props.oldColor).toHsv()
+			this.state.color = tinycolor(props.oldColor).toHsl()
 		}
 		if (props.defaultColor) {
-			this.state.color = tinycolor(props.defaultColor).toHsv()
+			this.state.color = tinycolor(props.defaultColor).toHsl()
 		}
 		this._layout = {width: 0, height: 0, x: 0, y: 0}
 		this._pageX = 0
@@ -31,7 +31,7 @@ export class HoloColorPicker extends Component {
 
 	_getColor() {
 		const passedColor = typeof this.props.color === 'string'
-			? tinycolor(this.props.color).toHsv()
+			? tinycolor(this.props.color).toHsl()
 			: this.props.color
 		return passedColor || this.state.color
 	}
@@ -45,18 +45,18 @@ export class HoloColorPicker extends Component {
 	_onOldColorSelected() {
 		const {oldColor, onOldColorSelected} = this.props
 		const color = tinycolor(oldColor)
-		this.setState({color: color.toHsv()})
+		this.setState({color: color.toHsl()})
 		onOldColorSelected && onOldColorSelected(color.toHexString())
 	}
 
 	_onSValueChange(s) {
-		const {h, v} = this._getColor()
-		this._onColorChange({h, s, v})
+		const {h, l} = this._getColor()
+		this._onColorChange({h, s, l})
 	}
 
-	_onVValueChange(v) {
+	_onVValueChange(l) {
 		const {h, s} = this._getColor()
-		this._onColorChange({h, s, v})
+		this._onColorChange({h, s, l})
 	}
 
 	_onColorChange(color) {
@@ -105,31 +105,31 @@ export class HoloColorPicker extends Component {
 
 	componentWillMount() {
 		const handleColorChange = ({x, y}) => {
-			const {s, v} = this._getColor()
+			const {s, l} = this._getColor()
 			const marginLeft = (this._layout.width - this.state.pickerSize) / 2
 			const marginTop = (this._layout.height - this.state.pickerSize) / 2
 			const relativeX = x - this._pageX - marginLeft;
 			const relativeY = y - this._pageY - marginTop;
 			const h = this._computeHValue(relativeX, relativeY)
-			this._onColorChange({h, s, v})
+			this._onColorChange({h, s, l})
 		}
 		this._pickerResponder = createPanResponder({
 			onStart: handleColorChange,
 			onMove: handleColorChange,
 		});
 
-    this.oldColorText = this.props.oldColorText;
-    this.selectedColorText = this.props.selectedColorText;
+		this.oldColorText = this.props.oldColorText;
+		this.selectedColorText = this.props.selectedColorText;
 	}
 
 	render() {
 		const {pickerSize} = this.state
 		const {oldColor, style} = this.props
 		const color = this._getColor()
-		const {h, s, v} = color
+		const {h, s, l} = color
 		const angle = this._hValueToRad(h)
 		const selectedColor = tinycolor(color).toHexString()
-		const indicatorColor = tinycolor({h, s: 1, v: 1}).toHexString()
+		const indicatorColor = tinycolor({h, s: 1, l: 1}).toHexString()
 		const computed = makeComputedStyles({
 			pickerSize,
 			selectedColor,
@@ -207,7 +207,7 @@ export class HoloColorPicker extends Component {
 
 				{
 					!this._hideLightnessSlider
-						? (<View style={styles.secondSlider}><Slider value={v} onValueChange={this._onVValueChange}/></View>)
+						? (<View style={styles.secondSlider}><Slider value={l} onValueChange={this._onVValueChange}/></View>)
 						: null
 				}
 
@@ -221,7 +221,7 @@ export class HoloColorPicker extends Component {
 HoloColorPicker.propTypes = {
 	color: PropTypes.oneOfType([
 		PropTypes.string,
-		PropTypes.shape({h: PropTypes.number, s: PropTypes.number, v: PropTypes.number}),
+		PropTypes.shape({h: PropTypes.number, s: PropTypes.number, l: PropTypes.number}),
 	]),
 	defaultColor: PropTypes.string,
 	oldColor: PropTypes.string,

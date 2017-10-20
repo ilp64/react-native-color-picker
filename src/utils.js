@@ -11,6 +11,15 @@ export function toHsv(color) {
 }
 
 /**
+ * Converts color to hsl representation.
+ * @param {string} color any color represenation - name, hexa, rgb
+ * @return {object} { h: number, s: number, l: number } object literal
+ */
+export function toHsl(color) {
+  return tinycolor(color).toHsl()
+}
+
+/**
  * Converts hsv object to hexa color string.
  * @param {object} hsv { h: number, s: number, v: number } object literal
  * @return {string} color in hexa representation
