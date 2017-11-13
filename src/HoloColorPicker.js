@@ -1,7 +1,9 @@
 import React, {Component, PropTypes} from 'react'
-import {TouchableOpacity, Slider, View, Image, StyleSheet, InteractionManager, Platform, Text} from 'react-native'
+import {TouchableOpacity, Slider, View, Image, StyleSheet, InteractionManager, Platform, Text, Dimensions} from 'react-native'
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import tinycolor from 'tinycolor2'
 import {createPanResponder, getOppositeColor} from './utils'
+const window = Dimensions.get('window');
 
 export class HoloColorPicker extends Component {
 
@@ -200,20 +202,43 @@ export class HoloColorPicker extends Component {
 
 				{
 					!this._hideSaturationSlider
-						? (<View><Slider value={s} onValueChange={this._onSValueChange}/></View>)
+						? <View>{this.getSlider(s, this._onSValueChange)}</View>
 						: null
 				}
 
 
 				{
 					!this._hideLightnessSlider
-						? (<View style={styles.secondSlider}><Slider value={l} onValueChange={this._onVValueChange}/></View>)
+						? (<View style={styles.secondSlider}>{this.getSlider(l, this._onVValueChange)}</View>)
 						: null
 				}
 
 
 			</View>
 		)
+	}
+
+	getSlider(value, valueChange) {
+    if (Platform.OS === 'android' && Platform.Version.toString() === '23') {
+      return <MultiSlider values={[Math.round(value * 100)]}
+	                 onValuesChange={v => valueChange(v[0] / 100)}
+	                 min={0}
+	                 max={100}
+	                 step={1}
+	                 sliderLength={window.width - 30}
+	                 markerStyle={{
+                     height: 24,
+                     width: 24,
+                     borderRadius: 12
+                   }}
+	                 pressedMarkerStyle={{
+                     height: 24,
+                     width: 24,
+                     borderRadius: 12
+                   }}/>;
+    }
+
+		return <View><Slider value={value} onValueChange={valueChange}/></View>;
 	}
 
 }

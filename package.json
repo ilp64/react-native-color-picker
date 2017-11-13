@@ -1,6 +1,6 @@
 {
   "name": "bone-cp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Color picker for react native",
   "main": "src/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "eslint-plugin-react": "^6.8.0"
   },
   "dependencies": {
-    "tinycolor2": "^1.4.1"
+    "tinycolor2": "^1.4.1",
+    "@ptomasroos/react-native-multi-slider": "0.0.11"
   }
 }
