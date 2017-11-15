@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {TouchableOpacity, Slider, View, Image, StyleSheet, InteractionManager, Platform, Text, Dimensions} from 'react-native'
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import tinycolor from 'tinycolor2'
-import {createPanResponder, getOppositeColor} from './utils'
+import {createPanResponder, getOppositeColor, floatToInt} from './utils'
 const window = Dimensions.get('window');
 
 export class HoloColorPicker extends Component {
@@ -29,7 +29,12 @@ export class HoloColorPicker extends Component {
 		this._onOldColorSelected = this._onOldColorSelected.bind(this)
 		this._hideSaturationSlider = props.hideSaturationSlider;
 		this._hideLightnessSlider = props.hideLightnessSlider;
-	}
+    this._saturationMin = props.saturationMin;
+    this._saturationMax = props.saturationMax;
+    this._lightnessMin = props.lightnessMin;
+    this._lightnessMax = props.lightnessMax;
+
+  }
 
 	_getColor() {
 		const passedColor = typeof this.props.color === 'string'
@@ -202,14 +207,14 @@ export class HoloColorPicker extends Component {
 
 				{
 					!this._hideSaturationSlider
-						? <View>{this.getSlider(s, this._onSValueChange)}</View>
+						? <View>{this.getSlider(s, this._saturationMin, this._saturationMax, this._onSValueChange)}</View>
 						: null
 				}
 
 
 				{
 					!this._hideLightnessSlider
-						? (<View style={styles.secondSlider}>{this.getSlider(l, this._onVValueChange)}</View>)
+						? (<View style={styles.secondSlider}>{this.getSlider(l, this._lightnessMin, this._lightnessMax, this._onVValueChange)}</View>)
 						: null
 				}
 
@@ -218,13 +223,18 @@ export class HoloColorPicker extends Component {
 		)
 	}
 
-	getSlider(value, valueChange) {
+	getSlider(value, min, max, valueChange) {
+    let cV = floatToInt(value, 3),
+      cMin = floatToInt(min, 3),
+      cMax = floatToInt(max, 3);
+
+
     if (Platform.OS === 'android' && Platform.Version.toString() === '23') {
-      return <MultiSlider values={[Math.round(value * 100)]}
-	                 onValuesChange={v => valueChange(v[0] / 100)}
-	                 min={0}
-	                 max={100}
-	                 step={1}
+      return <MultiSlider values={[cV]}
+	                 onValuesChange={v => valueChange(v[0] / 1000)}
+	                 min={cMin}
+	                 max={cMax}
+	                 // step={1}
 	                 sliderLength={window.width - 30}
 	                 markerStyle={{
                      height: 24,
@@ -238,7 +248,7 @@ export class HoloColorPicker extends Component {
                    }}/>;
     }
 
-		return <View><Slider value={value} onValueChange={valueChange}/></View>;
+		return <View><Slider value={value} onValueChange={valueChange} minimumValue={min} maximumValue={max}/></View>;
 	}
 
 }

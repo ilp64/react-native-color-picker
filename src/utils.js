@@ -143,3 +143,19 @@ export function hexToRgb(hex, alpha) {
 
   return rgb;
 }
+
+export function floatToInt(f, precision) {
+  let val = (''+f).split('.');
+  let prefix = '';
+  let lenBase = 0;
+  val = val[1] ? (prefix = val[0], val[1].substr(0, precision)) : (lenBase++, val[0]);
+
+  let d = precision - val.length + lenBase;
+  if (d > 0) {
+    while(--d >= 0){
+      val += '0';
+    }
+  }
+
+  return +(prefix +val);
+}
