@@ -229,7 +229,7 @@ export class HoloColorPicker extends Component {
       cMax = floatToInt(max, 3);
 
 
-    if (Platform.OS === 'android' && Platform.Version.toString() === '23') {
+    if (Platform.OS === 'android') {
       return <MultiSlider values={[cV]}
 	                 onValuesChange={v => valueChange(v[0] / 1000)}
 	                 min={cMin}
